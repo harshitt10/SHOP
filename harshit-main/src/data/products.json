@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "Classic White T-Shirt",
+    "price": 29.99,
+    "category": "clothing",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&crop=center",
+    "description": "Premium cotton t-shirt with a comfortable fit. Perfect for everyday wear.",
+    "slug": "classic-white-tshirt"
+  },
+  {
+    "id": 2,
+    "name": "Denim Jeans",
+    "price": 79.99,
+    "category": "clothing",
+    "image": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop&crop=center",
+    "description": "Classic blue denim jeans with a modern slim fit. Made from 100% cotton.",
+    "slug": "denim-jeans"
+  },
+  {
+    "id": 3,
+    "name": "Wireless Headphones",
+    "price": 199.99,
+    "category": "electronics",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&crop=center",
+    "description": "High-quality wireless headphones with noise cancellation and 30-hour battery life.",
+    "slug": "wireless-headphones"
+  },
+  {
+    "id": 4,
+    "name": "Smartphone Case",
+    "price": 24.99,
+    "category": "electronics",
+    "image": "https://images.unsplash.com/photo-1511707171631-9fecdf53b2e8?w=400&h=400&fit=crop&crop=center",
+    "description": "Protective case for your smartphone with shock absorption and wireless charging compatibility.",
+    "slug": "smartphone-case"
+  },
+  {
+    "id": 5,
+    "name": "Coffee Mug",
+    "price": 15.99,
+    "category": "home",
+    "image": "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=400&fit=crop&crop=center",
+    "description": "Ceramic coffee mug with a comfortable handle. Perfect for your morning coffee.",
+    "slug": "coffee-mug"
+  },
+  {
+    "id": 6,
+    "name": "Desk Lamp",
+    "price": 89.99,
+    "category": "home",
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center",
+    "description": "Adjustable LED desk lamp with multiple brightness levels and color temperatures.",
+    "slug": "desk-lamp"
+  },
+  {
+    "id": 7,
+    "name": "Running Shoes",
+    "price": 129.99,
+    "category": "sports",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop&crop=center",
+    "description": "Lightweight running shoes with excellent cushioning and breathable mesh upper.",
+    "slug": "running-shoes"
+  },
+  {
+    "id": 8,
+    "name": "Yoga Mat",
+    "price": 39.99,
+    "category": "sports",
+    "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop&crop=center",
+    "description": "Non-slip yoga mat made from eco-friendly materials. Perfect for all yoga practices.",
+    "slug": "yoga-mat"
+  },
+  {
+    "id": 9,
+    "name": "Hoodie",
+    "price": 59.99,
+    "category": "clothing",
+    "image": "https://images.unsplash.com/photo-1556821840-3a63f95609a8?w=400&h=400&fit=crop&crop=center",
+    "description": "Comfortable pullover hoodie with kangaroo pocket. Made from soft fleece material.",
+    "slug": "hoodie"
+  },
+  {
+    "id": 10,
+    "name": "Laptop Stand",
+    "price": 49.99,
+    "category": "electronics",
+    "image": "https://images.unsplash.com/photo-1527864550417-7f91c4da35f1?w=400&h=400&fit=crop&crop=center",
+    "description": "Adjustable aluminum laptop stand for better ergonomics and improved airflow.",
+    "slug": "laptop-stand"
+  },
+  {
+    "id": 11,
+    "name": "Throw Pillow",
+    "price": 34.99,
+    "category": "home",
+    "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop&crop=center",
+    "description": "Decorative throw pillow with removable cover. Adds comfort and style to any room.",
+    "slug": "throw-pillow"
+  },
+  {
+    "id": 12,
+    "name": "Water Bottle",
+    "price": 19.99,
+    "category": "sports",
+    "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop&crop=center",
+    "description": "Insulated stainless steel water bottle that keeps drinks cold for 24 hours.",
+    "slug": "water-bottle"
+  }
+]
