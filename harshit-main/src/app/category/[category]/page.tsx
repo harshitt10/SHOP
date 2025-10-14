@@ -23,14 +23,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const allProducts = getProductsByCategory(category);
 
   // Sorting state
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
+ const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
 
-  // Sort products based on selected order
-  const sortedProducts = [...allProducts].sort((a, b) => {
-    if (sortOrder === "asc") return a.price - b.price;
-    if (sortOrder === "desc") return b.price - a.price;
-    return 0; // default (no sort)
-  });
+// Sort products based on selected order
+const sortedProducts = [...allProducts].sort((a, b) => {
+  if (sortOrder === "asc") return a.price - b.price;
+  if (sortOrder === "desc") return b.price - a.price;
+  return 0; // default (no sort)
+});
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
