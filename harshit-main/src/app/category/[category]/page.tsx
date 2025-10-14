@@ -1,8 +1,8 @@
-"use client"; // 👈 Required for useState and interactive buttons
+"use client";
 
 import { useState } from "react";
 import { notFound } from "next/navigation";
-import { getProductsByCategory, getCategories } from "@/lib/products";
+import { getProductsByCategory, getCategories, getAllProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
 interface CategoryPageProps {
@@ -15,29 +15,30 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const { category } = params;
   const categories = getCategories();
 
-  if (!categories.includes(category)) {
+  // ✅ Allow "all" to bypass category validation
+  if (category !== "all" && !categories.includes(category)) {
     notFound();
   }
 
-  const allProducts = getProductsByCategory(category);
+  // ✅ Get products (handle "all" case)
+  const allProducts =
+    category === "all" ? getAllProducts() : getProductsByCategory(category);
 
-  // Track sorting order
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
 
-  // Sort products based on selected order
+  // ✅ Sorting logic
   const sortedProducts = [...allProducts].sort((a, b) => {
     if (sortOrder === "asc") return a.price - b.price;
     if (sortOrder === "desc") return b.price - a.price;
-    return 0; // Default (no sorting)
+    return 0;
   });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header + Sorting Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
-            {category}
+            {category === "all" ? "All Products" : category}
           </h1>
           <p className="text-gray-600">
             {sortedProducts.length} product
@@ -45,7 +46,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           </p>
         </div>
 
-        {/* Sorting Buttons */}
         <div className="flex gap-2 mt-4 sm:mt-0">
           <button
             onClick={() => setSortOrder("asc")}
@@ -82,18 +82,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         </div>
       </div>
 
-      {/* Products Grid */}
       {sortedProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {sortedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No products found in this category.</p>
-        </div>
-      )}
-    </div>
-  );
-}
