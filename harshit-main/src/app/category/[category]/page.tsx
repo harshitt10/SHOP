@@ -21,6 +21,7 @@ export default function Home() {
         <p className="text-gray-600">Discover our collection of premium products</p>
       </div>
 
+      {/* Sorting Dropdown */}
       <select
         value={sortOrder}
         onChange={(e) =>
