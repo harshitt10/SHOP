@@ -1,9 +1,7 @@
-"use client"; // 👈 THIS IS CRUCIAL — tells Next.js to render on client
-
 import { useState } from "react";
-import { notFound } from "next/navigation";
-import { getProductsByCategory, getCategories } from "@/lib/products";
+import { getCategories, getProductsByCategory } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
+import { notFound } from "next/navigation";
 
 interface CategoryPageProps {
   params: {
