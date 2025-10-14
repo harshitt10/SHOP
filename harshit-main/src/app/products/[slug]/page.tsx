@@ -31,10 +31,10 @@ export default function ProductPage({ params }: ProductPageProps) {
     (p) => p.id !== product.id
   );
 
-  // Sorting state: asc = low→high, desc = high→low, default = no sorting
+  // Sorting state (asc = Low→High, desc = High→Low, default = none)
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
 
-  // Apply sorting
+  // Sort similar products
   const sortedProducts = [...allProducts].sort((a, b) => {
     if (sortOrder === "asc") return a.price - b.price;
     if (sortOrder === "desc") return b.price - a.price;
@@ -43,7 +43,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Product Details Section */}
+      {/* Main Product Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Image */}
         <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
@@ -86,9 +86,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </p>
           </div>
 
-          <div className="text-3xl font-bold text-gray-900">
-            ${product.price}
-          </div>
+          <div className="text-3xl font-bold text-gray-900">${product.price}</div>
 
           <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
@@ -107,15 +105,21 @@ export default function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {/* Similar Products Section */}
-      {allProducts.length > 0 && (
+      {sortedProducts.length > 0 && (
         <div className="mt-16">
-          {/* Header + Sorting */}
+          {/* Header + Sorting Buttons */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900">
-              Similar Products
-            </h2>
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Similar Products
+              </h2>
+              <p className="text-gray-600 text-sm">
+                {sortedProducts.length} item
+                {sortedProducts.length !== 1 ? "s" : ""} found
+              </p>
+            </div>
 
-            {/* Sorting Buttons (same as CategoryPage) */}
+            {/* Sorting Buttons (same as category page) */}
             <div className="flex gap-2 mt-4 sm:mt-0">
               <button
                 onClick={() => setSortOrder("asc")}
@@ -124,7 +128,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                     ? "bg-gray-900 text-white border-gray-900"
                     : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
-                aria-label="Sort Low to High"
               >
                 Low → High
               </button>
@@ -136,7 +139,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                     ? "bg-gray-900 text-white border-gray-900"
                     : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
-                aria-label="Sort High to Low"
               >
                 High → Low
               </button>
@@ -148,7 +150,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                     ? "bg-gray-900 text-white border-gray-900"
                     : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
-                aria-label="Reset Sorting"
               >
                 Reset
               </button>
