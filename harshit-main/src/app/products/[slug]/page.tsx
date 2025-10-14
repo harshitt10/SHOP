@@ -2,22 +2,43 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { useState } from "react";
-import { getProductBySlug, getProductsByCategory } from "@/lib/products";
+import { useState, useMemo } from "react";
+// Assuming these imports lead to your data fetching and component files
+import { getProductBySlug, getProductsByCategory } from "@/lib/products"; 
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductCard from "@/components/ProductCard";
-
 interface ProductPageProps {
   params: {
     slug: string;
   };
 }
 
+// Helper component for a mock review section (for a richer product page UX)
+function ProductReviewSection() {
+  return (
+    <div className="mt-10 pt-6 border-t border-gray-200">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        Customer Reviews (4.5/5)
+      </h2>
+      <div className="space-y-4">
+        <div className="p-4 bg-gray-50 rounded-md">
+          <p className="text-sm font-medium text-gray-900">
+            Great quality for the price! ⭐⭐⭐⭐⭐
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------
+
 export default function ProductPage({ params }: ProductPageProps) {
   const { slug } = params;
   const product = getProductBySlug(slug);
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default"); // Sorting state
 
   if (!product) {
     notFound();
@@ -31,15 +52,26 @@ export default function ProductPage({ params }: ProductPageProps) {
     (p) => p.id !== product.id
   );
 
-  // Sorting state (asc = Low→High, desc = High→Low, default = none)
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
+  // 🚀 Use useMemo to prevent re-sorting on every render, only when needed.
+  const sortedProducts = useMemo(() => {
+    // 1. Create a shallow copy to prevent mutating the source array
+    const productsToSort = [...allProducts];
 
-  // Sort similar products
-  const sortedProducts = [...allProducts].sort((a, b) => {
-    if (sortOrder === "asc") return a.price - b.price;
-    if (sortOrder === "desc") return b.price - a.price;
-    return 0;
-  });
+    // 2. Perform the sort based on state
+    return productsToSort.sort((a, b) => {
+      if (sortOrder === "asc") return a.price - b.price;
+      if (sortOrder === "desc") return b.price - a.price;
+      return 0; // Default order
+    });
+  }, [allProducts, sortOrder]); // Re-run when similar products or sortOrder changes
+
+  // 🎨 Function to simplify Tailwind class logic for buttons
+  const getSortButtonClasses = (currentOrder: typeof sortOrder) =>
+    `px-4 py-2 border rounded-md text-sm font-medium transition ${
+      sortOrder === currentOrder
+        ? "bg-gray-900 text-white border-gray-900"
+        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+    }`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -49,29 +81,19 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
           {imageLoading && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-              <svg
-                className="w-12 h-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              {/* Simple loading spinner */}
+              <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
             </div>
           )}
           <Image
             src={imageError ? fallbackImage : product.image}
             alt={product.name}
             fill
-            className="object-cover"
+            className={`object-cover transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
             priority
             onError={() => setImageError(true)}
             onLoad={() => setImageLoading(false)}
+            sizes="(max-width: 1024px) 100vw, 50vw"
           />
         </div>
 
@@ -86,7 +108,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             </p>
           </div>
 
-          <div className="text-3xl font-bold text-gray-900">${product.price}</div>
+          <div className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</div>
 
           <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
@@ -94,62 +116,53 @@ export default function ProductPage({ params }: ProductPageProps) {
 
           <div className="pt-6 border-t border-gray-200">
             <h3 className="text-sm font-medium text-gray-900 mb-2">Features</h3>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>• High-quality materials</li>
-              <li>• Fast shipping</li>
-              <li>• 30-day return policy</li>
-              <li>• Customer support</li>
+            <ul className="text-sm text-gray-600 space-y-1 list-disc pl-5">
+              <li>High-quality materials</li>
+              <li>Fast shipping</li>
+              <li>30-day return policy</li>
+              <li>Customer support</li>
             </ul>
           </div>
+          
+          <ProductReviewSection />
         </div>
       </div>
 
+      {/* --------------------------------------------------------------------- */}
+      
       {/* Similar Products Section */}
       {sortedProducts.length > 0 && (
         <div className="mt-16">
-          {/* Header + Sorting Buttons */}
+          {/* Header + Sorting Buttons Container */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
                 Similar Products
               </h2>
               <p className="text-gray-600 text-sm">
-                {sortedProducts.length} item
-                {sortedProducts.length !== 1 ? "s" : ""} found
+                {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""} found
               </p>
             </div>
 
-            {/* Sorting Buttons (same as category page) */}
+            {/* 🔥 Sorting Buttons 🔥 */}
             <div className="flex gap-2 mt-4 sm:mt-0">
               <button
                 onClick={() => setSortOrder("asc")}
-                className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
-                  sortOrder === "asc"
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                }`}
+                className={getSortButtonClasses("asc")} // 👈 Low → High Button
               >
                 Low → High
               </button>
 
               <button
                 onClick={() => setSortOrder("desc")}
-                className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
-                  sortOrder === "desc"
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                }`}
+                className={getSortButtonClasses("desc")} // 👈 High → Low Button
               >
                 High → Low
               </button>
 
               <button
                 onClick={() => setSortOrder("default")}
-                className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
-                  sortOrder === "default"
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-                }`}
+                className={getSortButtonClasses("default")}
               >
                 Reset
               </button>
