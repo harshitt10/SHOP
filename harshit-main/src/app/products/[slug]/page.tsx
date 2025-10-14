@@ -26,20 +26,21 @@ export default function ProductPage({ params }: ProductPageProps) {
   const fallbackImage =
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&crop=center&auto=format&q=80";
 
-  // 🔹 Get similar products from same category
+  // 🔹 Fetch similar products
   const allProducts = getProductsByCategory(product.category).filter(
     (p) => p.id !== product.id
   );
 
-  // 🔹 Sorting state
-  const [sortOrder, setSortOrder] = useState<"lowToHigh" | "highToLow" | null>(
-    null
+  // 🔹 Sorting state: "asc" = low→high, "desc" = high→low, "default" = none
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">(
+    "default"
   );
 
+  // 🔹 Sort similar products based on selected order
   const sortedProducts = [...allProducts].sort((a, b) => {
-    if (sortOrder === "lowToHigh") return a.price - b.price;
-    if (sortOrder === "highToLow") return b.price - a.price;
-    return 0;
+    if (sortOrder === "asc") return a.price - b.price;
+    if (sortOrder === "desc") return b.price - a.price;
+    return 0; // default (no sorting)
   });
 
   return (
@@ -108,37 +109,52 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
 
-      {/* 🔹 Similar Products Section with Sorting */}
+      {/* 🔹 Similar Products Section with Enhanced Sorting */}
       {allProducts.length > 0 && (
         <div className="mt-16">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <h2 className="text-2xl font-semibold text-gray-900">
               Similar Products
             </h2>
-            <div className="space-x-2">
+
+            {/* Sorting Buttons */}
+            <div className="flex gap-2 mt-4 sm:mt-0">
               <button
-                onClick={() => setSortOrder("lowToHigh")}
-                className={`px-3 py-1 rounded-md border ${
-                  sortOrder === "lowToHigh"
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700"
+                onClick={() => setSortOrder("asc")}
+                className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
+                  sortOrder === "asc"
+                    ? "bg-gray-900 text-white border-gray-900"
+                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
               >
-                Price: Low to High
+                Low → High
               </button>
+
               <button
-                onClick={() => setSortOrder("highToLow")}
-                className={`px-3 py-1 rounded-md border ${
-                  sortOrder === "highToLow"
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700"
+                onClick={() => setSortOrder("desc")}
+                className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
+                  sortOrder === "desc"
+                    ? "bg-gray-900 text-white border-gray-900"
+                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
               >
-                Price: High to Low
+                High → Low
+              </button>
+
+              <button
+                onClick={() => setSortOrder("default")}
+                className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
+                  sortOrder === "default"
+                    ? "bg-gray-900 text-white border-gray-900"
+                    : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                }`}
+              >
+                Reset
               </button>
             </div>
           </div>
 
+          {/* Similar Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {sortedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
