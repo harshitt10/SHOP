@@ -39,144 +39,79 @@ export default function ProductPage({ params }: ProductPageProps) {
   const product = getProductBySlug(slug);
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default"); // Sorting state
+   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
 
-  if (!product) {
-    notFound();
-  }
-
-  const fallbackImage =
-    "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&crop=center&auto=format&q=80";
-
-  // Get similar products (same category, exclude current)
-  // This array must contain items for the buttons to appear!
-  const allProducts = getProductsByCategory(product.category).filter(
-    (p) => p.id !== product.id
-  );
-
-  // 🚀 Sorting Logic: Used to sort the 'Similar Products' list.
-  const sortedProducts = useMemo(() => {
-    const productsToSort = [...allProducts];
-
-    return productsToSort.sort((a, b) => {
-      if (sortOrder === "asc") return a.price - b.price; // Low -> High
-      if (sortOrder === "desc") return b.price - a.price; // High -> Low
-      return 0; // Default order (as defined in the source data)
-    });
-  }, [allProducts, sortOrder]); 
-
-  // 🎨 Function to generate button Tailwind classes based on active state
-  const getSortButtonClasses = (currentOrder: typeof sortOrder) =>
-    `px-4 py-2 border rounded-md text-sm font-medium transition ${
-      sortOrder === currentOrder
-        ? "bg-gray-900 text-white border-gray-900"
-        : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
-    }`;
+  // Sort products based on selected order
+  const sortedProducts = [...allProducts].sort((a, b) => {
+    if (sortOrder === "asc") return a.price - b.price;
+    if (sortOrder === "desc") return b.price - a.price;
+    return 0; // Default (no sorting)
+  });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Main Product Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Product Image */}
-        <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
-          {imageLoading && (
-            <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-              <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
-            </div>
-          )}
-          <Image
-            src={imageError ? fallbackImage : product.image}
-            alt={product.name}
-            fill
-            className={`object-cover transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
-            priority
-            onError={() => setImageError(true)}
-            onLoad={() => setImageLoading(false)}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
+      {/* Header + Sorting Buttons */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
+            {category}
+          </h1>
+          <p className="text-gray-600">
+            {sortedProducts.length} product
+            {sortedProducts.length !== 1 ? "s" : ""} found
+          </p>
         </div>
 
-        {/* Product Info */}
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {product.name}
-            </h1>
-            <p className="text-lg text-gray-600 capitalize">
-              {product.category}
-            </p>
-          </div>
+        {/* Sorting Buttons */}
+        <div className="flex gap-2 mt-4 sm:mt-0">
+          <button
+            onClick={() => setSortOrder("asc")}
+            className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
+              sortOrder === "asc"
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            Low → High
+          </button>
 
-          <div className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</div>
+          <button
+            onClick={() => setSortOrder("desc")}
+            className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
+              sortOrder === "desc"
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            High → Low
+          </button>
 
-          <p className="text-gray-700 leading-relaxed">{product.description}</p>
-
-          <AddToCartButton product={product} />
-
-          <div className="pt-6 border-t border-gray-200">
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Features</h3>
-            <ul className="text-sm text-gray-600 space-y-1 list-disc pl-5">
-              <li>High-quality materials</li>
-              <li>Fast shipping</li>
-              <li>30-day return policy</li>
-              <li>Customer support</li>
-            </ul>
-          </div>
-          
-          <ProductReviewSection />
+          <button
+            onClick={() => setSortOrder("default")}
+            className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
+              sortOrder === "default"
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            Reset
+          </button>
         </div>
       </div>
 
-      {/* --------------------------------------------------------------------- */}
-      
-      {/* Similar Products Section */}
-      {/* The buttons and the list only appear if there is at least one similar product. */}
-      {sortedProducts.length > 0 && (
-        <div className="mt-16">
-          {/* Header + Sorting Buttons (Category Page Style) */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-            <div>
-              <h2 className="text-2xl font-semibold text-gray-900">
-                Similar Products
-              </h2>
-              <p className="text-gray-600 text-sm">
-                {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""} found
-              </p>
-            </div>
-
-            {/* 🔥 Sorting Buttons: Visible in this header! 🔥 */}
-            <div className="flex gap-2 mt-4 sm:mt-0">
-              <button
-                onClick={() => setSortOrder("asc")}
-                className={getSortButtonClasses("asc")}
-              >
-                Low → High
-              </button>
-
-              <button
-                onClick={() => setSortOrder("desc")}
-                className={getSortButtonClasses("desc")}
-              >
-                High → Low
-              </button>
-
-              <button
-                onClick={() => setSortOrder("default")}
-                className={getSortButtonClasses("default")}
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-
-          {/* Similar Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {sortedProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+      {/* Products Grid */}
+      {sortedProducts.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {sortedProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500">No products found in this category.</p>
         </div>
       )}
     </div>
   );
 }
+
