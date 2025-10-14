@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useMemo } from "react";
 import { getProductBySlug, getProductsByCategory } from "@/lib/products"; 
 import AddToCartButton from "@/components/AddToCartButton";
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/ProductCard"; // Still needed for the conditional similar products list
 
 interface ProductPageProps {
 	params: {
@@ -38,7 +38,6 @@ export default function ProductPage({ params }: ProductPageProps) {
 	const product = getProductBySlug(slug);
 	const [imageError, setImageError] = useState(false);
 	const [imageLoading, setImageLoading] = useState(true);
-    // Added sorting state
     const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default"); 
 
 	if (!product) {
@@ -47,15 +46,14 @@ export default function ProductPage({ params }: ProductPageProps) {
 
 	const fallbackImage = `https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&crop=center&auto=format&q=80`;
 
-    // Fetch similar products (same category, exclude current)
+    // Data setup for the optional "Similar Products" section below
     const allProducts = getProductsByCategory(product.category).filter(
         (p) => p.slug !== product.slug
     );
 
-    // 🚀 Sorting Logic: Sorts the 'Similar Products' list.
+    // Sorting logic for the similar products list
     const sortedProducts = useMemo(() => {
         const productsToSort = [...allProducts];
-
         return productsToSort.sort((a, b) => {
             if (sortOrder === "asc") return a.price - b.price;
             if (sortOrder === "desc") return b.price - a.price;
@@ -63,7 +61,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         });
     }, [allProducts, sortOrder]); 
 
-    // 🎨 Function to generate button Tailwind classes
+    // Function to generate button Tailwind classes
     const getSortButtonClasses = (currentOrder: typeof sortOrder) =>
         `px-4 py-2 border rounded-md text-sm font-medium transition ${
             sortOrder === currentOrder
@@ -73,9 +71,9 @@ export default function ProductPage({ params }: ProductPageProps) {
 
 	return (
 		<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-			{/* Main Product Section (Top half of the page) */}
+			{/* Main Product Section */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-				{/* Product Image */}
+				{/* Product Image (Left Column) */}
 				<div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
 					{imageLoading && (
 						<div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
@@ -94,7 +92,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 					/>
 				</div>
 
-				{/* Product Details (Buttons Placed Here for Guaranteed Visibility) */}
+				{/* Product Details (Right Column) */}
 				<div className="space-y-6">
 					<div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
@@ -103,7 +101,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
 					<div className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</div> 
                     
-                    {/* 🔥 BUTTONS PLACED HERE (Guaranteed visibility on main page) 🔥 */}
+                    {/* 🔥 BUTTONS ARE NOW HERE, PERMANENTLY VISIBLE 🔥 */}
                     <div className="flex gap-2 items-center text-sm pt-2">
                         <span className="text-gray-600 font-medium">Sort Similar:</span>
                         <button
@@ -147,12 +145,12 @@ export default function ProductPage({ params }: ProductPageProps) {
 				</div>
 			</div>
             
-            {/* --------------------------------------------------------------------- */}
+			{/* --------------------------------------------------------------------- */}
             
             {/* Similar Products Section (Only displays the grid if products are found) */}
+            {/* The buttons are gone from here, but the list still uses the sortOrder state */}
             {sortedProducts.length > 0 && (
                 <div className="mt-16">
-                    {/* Header (No buttons here, as they are now in the main column) */}
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold text-gray-900">
                             More in {product.category}
