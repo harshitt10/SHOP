@@ -2,8 +2,7 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { useState, useMemo } from "react"; // 👈 Added useMemo for sorting
-// 👈 Added getProductsByCategory and ProductCard imports
+import { useState, useMemo } from "react";
 import { getProductBySlug, getProductsByCategory } from "@/lib/products"; 
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductCard from "@/components/ProductCard";
@@ -14,7 +13,7 @@ interface ProductPageProps {
 	};
 }
 
-// Helper component for a mock review section (Optional, added for a richer look)
+// Helper component for a mock review section (Optional)
 function ProductReviewSection() {
     return (
         <div className="mt-10 pt-6 border-t border-gray-200">
@@ -39,7 +38,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 	const product = getProductBySlug(slug);
 	const [imageError, setImageError] = useState(false);
 	const [imageLoading, setImageLoading] = useState(true);
-    // 👈 Added sorting state
+    // Added sorting state
     const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default"); 
 
 	if (!product) {
@@ -64,7 +63,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         });
     }, [allProducts, sortOrder]); 
 
-    // 🎨 Function to generate button Tailwind classes (Matching Category Page Style)
+    // 🎨 Function to generate button Tailwind classes
     const getSortButtonClasses = (currentOrder: typeof sortOrder) =>
         `px-4 py-2 border rounded-md text-sm font-medium transition ${
             sortOrder === currentOrder
@@ -80,7 +79,6 @@ export default function ProductPage({ params }: ProductPageProps) {
 				<div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
 					{imageLoading && (
 						<div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-							{/* Using a simple spinner for consistency */}
                             <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
 						</div>
 					)}
@@ -96,15 +94,40 @@ export default function ProductPage({ params }: ProductPageProps) {
 					/>
 				</div>
 
-				{/* Product Details */}
+				{/* Product Details (Buttons Placed Here for Guaranteed Visibility) */}
 				<div className="space-y-6">
 					<div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
 						<p className="text-lg text-gray-600 capitalize">{product.category}</p>
 					</div>
 
-					{/* Fixed price formatting */}
 					<div className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</div> 
+                    
+                    {/* 🔥 BUTTONS PLACED HERE (Guaranteed visibility on main page) 🔥 */}
+                    <div className="flex gap-2 items-center text-sm pt-2">
+                        <span className="text-gray-600 font-medium">Sort Similar:</span>
+                        <button
+                            onClick={() => setSortOrder("asc")}
+                            className={getSortButtonClasses("asc")}
+                        >
+                            Low → High
+                        </button>
+
+                        <button
+                            onClick={() => setSortOrder("desc")}
+                            className={getSortButtonClasses("desc")}
+                        >
+                            High → Low
+                        </button>
+
+                        <button
+                            onClick={() => setSortOrder("default")}
+                            className={getSortButtonClasses("default")}
+                        >
+                            Reset
+                        </button>
+                    </div>
+                    {/* ------------------------------------------------------------- */}
 
 					<p className="text-gray-700 leading-relaxed">{product.description}</p>
 
@@ -119,54 +142,27 @@ export default function ProductPage({ params }: ProductPageProps) {
 							<li>Customer support</li>
 						</ul>
 					</div>
-                    {/* Added the optional review section */}
+                    
                     <ProductReviewSection /> 
 				</div>
 			</div>
             
             {/* --------------------------------------------------------------------- */}
             
-            {/* 🔥 Similar Products Section: Includes Header and Buttons 🔥 */}
-            {/* Renders only if similar products are found */}
+            {/* Similar Products Section (Only displays the grid if products are found) */}
             {sortedProducts.length > 0 && (
                 <div className="mt-16">
-                    {/* Header + Sorting Buttons (ABOVE the product grid) */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-                        <div>
-                            <h2 className="text-2xl font-semibold text-gray-900">
-                                Similar Products
-                            </h2>
-                            <p className="text-gray-600 text-sm">
-                                {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""} found in {product.category}
-                            </p>
-                        </div>
-
-                        {/* Sorting Buttons */}
-                        <div className="flex gap-2 mt-4 sm:mt-0">
-                            <button
-                                onClick={() => setSortOrder("asc")}
-                                className={getSortButtonClasses("asc")}
-                            >
-                                Low → High
-                            </button>
-
-                            <button
-                                onClick={() => setSortOrder("desc")}
-                                className={getSortButtonClasses("desc")}
-                            >
-                                High → Low
-                            </button>
-
-                            <button
-                                onClick={() => setSortOrder("default")}
-                                className={getSortButtonClasses("default")}
-                            >
-                                Reset
-                            </button>
-                        </div>
+                    {/* Header (No buttons here, as they are now in the main column) */}
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-semibold text-gray-900">
+                            More in {product.category}
+                        </h2>
+                        <p className="text-gray-600 text-sm">
+                            {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""} found
+                        </p>
                     </div>
 
-                    {/* Products Grid (BELOW the buttons) */}
+                    {/* Products Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {sortedProducts.map((p) => (
                             <ProductCard key={p.id} product={p} />
