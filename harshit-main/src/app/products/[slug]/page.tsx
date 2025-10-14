@@ -26,21 +26,20 @@ export default function ProductPage({ params }: ProductPageProps) {
   const fallbackImage =
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&crop=center&auto=format&q=80";
 
-  // 🔹 Fetch similar products
+  // Get similar products (same category, exclude current)
   const allProducts = getProductsByCategory(product.category).filter(
     (p) => p.id !== product.id
   );
 
-  // 🔹 Sorting state: "asc" = low→high, "desc" = high→low, "default" = none
+  // Sorting state
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">(
     "default"
   );
-
-  // 🔹 Sort similar products based on selected order
+  // Sort logic
   const sortedProducts = [...allProducts].sort((a, b) => {
     if (sortOrder === "asc") return a.price - b.price;
     if (sortOrder === "desc") return b.price - a.price;
-    return 0; // default (no sorting)
+    return 0;
   });
 
   return (
@@ -109,14 +108,13 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
 
-      {/* 🔹 Similar Products Section with Enhanced Sorting */}
+      {/* Similar Products Section */}
       {allProducts.length > 0 && (
         <div className="mt-16">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <h2 className="text-2xl font-semibold text-gray-900">
               Similar Products
             </h2>
-
             {/* Sorting Buttons */}
             <div className="flex gap-2 mt-4 sm:mt-0">
               <button
@@ -126,10 +124,10 @@ export default function ProductPage({ params }: ProductPageProps) {
                     ? "bg-gray-900 text-white border-gray-900"
                     : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
+                aria-label="Sort Low to High"
               >
                 Low → High
               </button>
-
               <button
                 onClick={() => setSortOrder("desc")}
                 className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
@@ -137,10 +135,10 @@ export default function ProductPage({ params }: ProductPageProps) {
                     ? "bg-gray-900 text-white border-gray-900"
                     : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
+                aria-label="Sort High to Low"
               >
                 High → Low
               </button>
-
               <button
                 onClick={() => setSortOrder("default")}
                 className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
@@ -148,12 +146,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                     ? "bg-gray-900 text-white border-gray-900"
                     : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
                 }`}
+                aria-label="Reset Sorting"
               >
                 Reset
               </button>
             </div>
           </div>
-
           {/* Similar Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {sortedProducts.map((p) => (
