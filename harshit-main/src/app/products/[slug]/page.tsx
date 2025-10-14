@@ -3,7 +3,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-// Assuming these imports lead to your data fetching and component files
+// Assumes you have src/lib/products.ts and src/data/products.json
 import { getProductBySlug, getProductsByCategory } from "@/lib/products"; 
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductCard from "@/components/ProductCard";
@@ -49,24 +49,23 @@ export default function ProductPage({ params }: ProductPageProps) {
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop&crop=center&auto=format&q=80";
 
   // Get similar products (same category, exclude current)
+  // This array must contain items for the buttons to appear!
   const allProducts = getProductsByCategory(product.category).filter(
     (p) => p.id !== product.id
   );
 
-  // 🚀 Sorting Logic: Re-sorts only when the sort order changes.
+  // 🚀 Sorting Logic: Used to sort the 'Similar Products' list.
   const sortedProducts = useMemo(() => {
-    // 1. Create a shallow copy to prevent mutating the source array
     const productsToSort = [...allProducts];
 
-    // 2. Perform the sort based on state
     return productsToSort.sort((a, b) => {
-      if (sortOrder === "asc") return a.price - b.price;
-      if (sortOrder === "desc") return b.price - a.price;
-      return 0; // Default order
+      if (sortOrder === "asc") return a.price - b.price; // Low -> High
+      if (sortOrder === "desc") return b.price - a.price; // High -> Low
+      return 0; // Default order (as defined in the source data)
     });
   }, [allProducts, sortOrder]); 
 
-  // 🎨 Function to simplify Tailwind class logic for buttons
+  // 🎨 Function to generate button Tailwind classes based on active state
   const getSortButtonClasses = (currentOrder: typeof sortOrder) =>
     `px-4 py-2 border rounded-md text-sm font-medium transition ${
       sortOrder === currentOrder
@@ -82,7 +81,6 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
           {imageLoading && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-              {/* Simple loading spinner */}
               <div className="w-12 h-12 border-4 border-gray-300 border-t-gray-500 rounded-full animate-spin"></div>
             </div>
           )}
@@ -132,20 +130,21 @@ export default function ProductPage({ params }: ProductPageProps) {
       {/* --------------------------------------------------------------------- */}
       
       {/* Similar Products Section */}
+      {/* The buttons and the list only appear if there is at least one similar product. */}
       {sortedProducts.length > 0 && (
         <div className="mt-16">
-          {/* Header + Sorting Buttons (CATEGORY PAGE STYLE) */}
+          {/* Header + Sorting Buttons (Category Page Style) */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
-                Similar Products in {product.category.toUpperCase()}
+                Similar Products
               </h2>
               <p className="text-gray-600 text-sm">
                 {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""} found
               </p>
             </div>
 
-            {/* 🔥 Sorting Buttons: Visible here like a category page! 🔥 */}
+            {/* 🔥 Sorting Buttons: Visible in this header! 🔥 */}
             <div className="flex gap-2 mt-4 sm:mt-0">
               <button
                 onClick={() => setSortOrder("asc")}
