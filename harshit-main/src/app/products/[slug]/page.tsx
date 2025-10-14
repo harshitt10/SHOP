@@ -31,11 +31,10 @@ export default function ProductPage({ params }: ProductPageProps) {
     (p) => p.id !== product.id
   );
 
-  // Sorting state
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">(
-    "default"
-  );
-  // Sort logic
+  // Sorting state: asc = low→high, desc = high→low, default = no sorting
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "default">("default");
+
+  // Apply sorting
   const sortedProducts = [...allProducts].sort((a, b) => {
     if (sortOrder === "asc") return a.price - b.price;
     if (sortOrder === "desc") return b.price - a.price;
@@ -44,6 +43,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Product Details Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Image */}
         <div className="aspect-square relative overflow-hidden rounded-lg bg-gray-100">
@@ -75,7 +75,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           />
         </div>
 
-        {/* Product Details */}
+        {/* Product Info */}
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -90,9 +90,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             ${product.price}
           </div>
 
-          <p className="text-gray-700 leading-relaxed">
-            {product.description}
-          </p>
+          <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
           <AddToCartButton product={product} />
 
@@ -111,11 +109,13 @@ export default function ProductPage({ params }: ProductPageProps) {
       {/* Similar Products Section */}
       {allProducts.length > 0 && (
         <div className="mt-16">
+          {/* Header + Sorting */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <h2 className="text-2xl font-semibold text-gray-900">
               Similar Products
             </h2>
-            {/* Sorting Buttons */}
+
+            {/* Sorting Buttons (same as CategoryPage) */}
             <div className="flex gap-2 mt-4 sm:mt-0">
               <button
                 onClick={() => setSortOrder("asc")}
@@ -128,6 +128,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               >
                 Low → High
               </button>
+
               <button
                 onClick={() => setSortOrder("desc")}
                 className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
@@ -139,6 +140,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               >
                 High → Low
               </button>
+
               <button
                 onClick={() => setSortOrder("default")}
                 className={`px-4 py-2 border rounded-md text-sm font-medium transition ${
@@ -152,6 +154,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               </button>
             </div>
           </div>
+
           {/* Similar Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {sortedProducts.map((p) => (
