@@ -7,6 +7,7 @@ import { useState, useMemo } from "react";
 import { getProductBySlug, getProductsByCategory } from "@/lib/products"; 
 import AddToCartButton from "@/components/AddToCartButton";
 import ProductCard from "@/components/ProductCard";
+
 interface ProductPageProps {
   params: {
     slug: string;
@@ -52,7 +53,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     (p) => p.id !== product.id
   );
 
-  // 🚀 Use useMemo to prevent re-sorting on every render, only when needed.
+  // 🚀 Sorting Logic: Used for the 'Similar Products' section only.
   const sortedProducts = useMemo(() => {
     // 1. Create a shallow copy to prevent mutating the source array
     const productsToSort = [...allProducts];
@@ -66,6 +67,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   }, [allProducts, sortOrder]); // Re-run when similar products or sortOrder changes
 
   // 🎨 Function to simplify Tailwind class logic for buttons
+  // Note: This function will be reused for both sets of buttons, if the user wanted two sets.
   const getSortButtonClasses = (currentOrder: typeof sortOrder) =>
     `px-4 py-2 border rounded-md text-sm font-medium transition ${
       sortOrder === currentOrder
@@ -109,6 +111,32 @@ export default function ProductPage({ params }: ProductPageProps) {
           </div>
 
           <div className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</div>
+          
+          {/* 🔥 SORTING BUTTONS MOVED TO MAIN PRODUCT INFO COLUMN 🔥 */}
+          <div className="flex gap-2 text-sm pt-2">
+            <span className="text-gray-600 self-center font-medium">Sort Similar:</span>
+            <button
+              onClick={() => setSortOrder("asc")}
+              className={getSortButtonClasses("asc")}
+            >
+              Low → High
+            </button>
+
+            <button
+              onClick={() => setSortOrder("desc")}
+              className={getSortButtonClasses("desc")}
+            >
+              High → Low
+            </button>
+
+            <button
+              onClick={() => setSortOrder("default")}
+              className={getSortButtonClasses("default")}
+            >
+              Reset
+            </button>
+          </div>
+          {/* ------------------------------------------------------------- */}
 
           <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
@@ -130,10 +158,10 @@ export default function ProductPage({ params }: ProductPageProps) {
 
       {/* --------------------------------------------------------------------- */}
       
-      {/* Similar Products Section */}
+      {/* Similar Products Section - now renders WITHOUT its own buttons, but uses the ones above */}
       {sortedProducts.length > 0 && (
         <div className="mt-16">
-          {/* Header + Sorting Buttons Container */}
+          {/* Header (No Buttons Here) */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">
@@ -143,30 +171,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {sortedProducts.length} item{sortedProducts.length !== 1 ? "s" : ""} found
               </p>
             </div>
-
-            {/* 🔥 Sorting Buttons 🔥 */}
-            <div className="flex gap-2 mt-4 sm:mt-0">
-              <button
-                onClick={() => setSortOrder("asc")}
-                className={getSortButtonClasses("asc")} // 👈 Low → High Button
-              >
-                Low → High
-              </button>
-
-              <button
-                onClick={() => setSortOrder("desc")}
-                className={getSortButtonClasses("desc")} // 👈 High → Low Button
-              >
-                High → Low
-              </button>
-
-              <button
-                onClick={() => setSortOrder("default")}
-                className={getSortButtonClasses("default")}
-              >
-                Reset
-              </button>
-            </div>
+            
+            {/* The old sorting buttons div is removed here */}
+            
           </div>
 
           {/* Similar Products Grid */}
