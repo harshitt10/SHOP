@@ -40,7 +40,7 @@
     "name": "Coffee Mug",
     "price": 15.99,
     "category": "home",
-    "image": "https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=400&h=400&fit=crop&crop=center",
+    "image": "https://plus.unsplash.com/premium_photo-1719017276626-1e2e4fd6f79b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1887",
     "description": "Ceramic coffee mug with a comfortable handle. Perfect for your morning coffee.",
     "slug": "coffee-mug"
   },
@@ -76,7 +76,7 @@
     "name": "Hoodie",
     "price": 59.99,
     "category": "clothing",
-    "image": "https://images.unsplash.com/photo-1556821840-3a63f95609a8?w=400&h=400&fit=crop&crop=center",
+    "image": "https://plus.unsplash.com/premium_photo-1673827311290-d435f481152e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aG9vZGllfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600",
     "description": "Comfortable pullover hoodie with kangaroo pocket. Made from soft fleece material.",
     "slug": "hoodie"
   },
@@ -85,7 +85,7 @@
     "name": "Laptop Stand",
     "price": 49.99,
     "category": "electronics",
-    "image": "https://images.unsplash.com/photo-1527864550417-7f91c4da35f1?w=400&h=400&fit=crop&crop=center",
+    "image": "https://images.unsplash.com/photo-1623251606108-512c7c4a3507?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074",
     "description": "Adjustable aluminum laptop stand for better ergonomics and improved airflow.",
     "slug": "laptop-stand"
   },
