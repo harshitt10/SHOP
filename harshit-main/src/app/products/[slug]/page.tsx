@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useMemo } from "react";
 import { getProductBySlug, getProductsByCategory } from "@/lib/products"; 
 import AddToCartButton from "@/components/AddToCartButton";
-import ProductCard from "@/components/ProductCard"; // Still needed for the conditional similar products list
+import ProductCard from "@/components/ProductCard";
 
 interface ProductPageProps {
 	params: {
@@ -13,7 +13,7 @@ interface ProductPageProps {
 	};
 }
 
-// Helper component for a mock review section (Optional)
+
 function ProductReviewSection() {
     return (
         <div className="mt-10 pt-6 border-t border-gray-200">
@@ -92,7 +92,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 					/>
 				</div>
 
-				{/* Product Details (Right Column) */}
+				
 				<div className="space-y-6">
 					<div>
 						<h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
@@ -101,7 +101,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
 					<div className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</div> 
                     
-                    {/* 🔥 BUTTONS ARE NOW HERE, PERMANENTLY VISIBLE 🔥 */}
+                  
                     <div className="flex gap-2 items-center text-sm pt-2">
                         <span className="text-gray-600 font-medium">Sort Similar:</span>
                         <button
@@ -147,8 +147,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             
 			{/* --------------------------------------------------------------------- */}
             
-            {/* Similar Products Section (Only displays the grid if products are found) */}
-            {/* The buttons are gone from here, but the list still uses the sortOrder state */}
+         
             {sortedProducts.length > 0 && (
                 <div className="mt-16">
                     <div className="mb-8">
@@ -160,7 +159,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                         </p>
                     </div>
 
-                    {/* Products Grid */}
+                   
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {sortedProducts.map((p) => (
                             <ProductCard key={p.id} product={p} />
