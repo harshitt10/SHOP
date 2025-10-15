@@ -40,7 +40,7 @@
     "name": "Coffee Mug",
     "price": 15.99,
     "category": "home",
-    "image": "https://plus.unsplash.com/premium_photo-1719017276626-1e2e4fd6f79b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1887",
+    "image": "https://images.unsplash.com/photo-1576360176965-d11beef9c669?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
     "description": "Ceramic coffee mug with a comfortable handle. Perfect for your morning coffee.",
     "slug": "coffee-mug"
   },
@@ -76,7 +76,7 @@
     "name": "Hoodie",
     "price": 59.99,
     "category": "clothing",
-    "image": "https://plus.unsplash.com/premium_photo-1673827311290-d435f481152e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aG9vZGllfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=600",
+    "image": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1072",
     "description": "Comfortable pullover hoodie with kangaroo pocket. Made from soft fleece material.",
     "slug": "hoodie"
   },
