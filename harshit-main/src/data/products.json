@@ -31,7 +31,7 @@
     "name": "Smartphone Case",
     "price": 24.99,
     "category": "electronics",
-    "image": "https://unsplash.com/photos/green-iphone-5-c-on-white-table--uF6u5Cmnsw",
+    "image": "https://unsplash.com/photos/green-iphone-5-c-on-white-table--uF6u5Cmnsw?w=400&h=400&fit=crop&crop=center",
     "description": "Protective case for your smartphone with shock absorption and wireless charging compatibility.",
     "slug": "smartphone-case"
   },
